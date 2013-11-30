@@ -29,6 +29,129 @@
 		<script type="text/javascript">
 
 				//SU CODIGO AQUI
+				Ext.onReady(function(){
+					var datosBarras = [{
+					nombreBarra : 'Lunes',
+					valorBarra : 13.5
+				}, {
+					nombreBarra : 'Martes',
+					valorBarra : 16
+				}, {
+					nombreBarra : 'Miercoles',
+					valorBarra : 20.1
+				}, {
+					nombreBarra : 'Jueves',
+					valorBarra : 17.5
+				}, {
+					nombreBarra : 'Viernes',
+					valorBarra : 30.9
+				}];
+
+				//creamos un objeto de EXTJS que sirve de contenedor para el arreglo de datos
+				var almacenDatos = Ext.create('Ext.data.JsonStore', {
+					fields : ['nombreBarra', 'valorBarra'],
+					data : datosBarras
+				});
+				
+				//INICIA LA CONSTRUCCION DE LA GRAFICA DE BARRAS
+				Ext.create('Ext.chart.Chart', {
+					renderTo : "contenedor-barras", //queremos que se pinte en el div con id contenedor-barras
+					width : 500, //ancho de la grafica
+					height : 300, //alto de la grafica
+					animate : true, //genera una animacion al cargar la pagina
+					store : almacenDatos, //el objeto que guarda los datos para esta grafica
+					//CONFIGURACION DEL EJEJ Y
+					axes : [{
+						type : 'Numeric', //casi siempre es Numeric (datos)
+						position : 'left', //dejar siempre como left. right se usa bajo circunstancias muy particulares
+						fields : 'valorBarra', //que propiedad del objeto datosBarras contiene los valores(numericos) de las barras
+						title : 'Usuarios (porcentaje)', //el titulo que aparece sobre el eje Y
+						grid : true //indica si queremos que aparezca unas lineas horizontales
+					},
+					//CONFIGURACION DEL EJE X
+					{
+						type : 'Category', //casi siempre es Category
+						position : 'bottom', //donde se ubica el titulo del eje X, otro valor es top
+						fields : 'nombreBarra', //que campo del objeto datosBarras contiene el nombre de las columnas
+						title : 'Días' //titulo del EJE Y
+					}],
+					//CONFIGURACION DEL TIPO DE GRAFICA: COLUMNAS, AREA O LINEA
+					series : [{
+						type : 'column', //otros valores posibles son area y line
+						axis : 'left', //dejar como left, right se usa bajo circunstancias muy particulares
+						highlight : true, //habilita una animacion que pone un borde azul alrededor de la columna
+
+						//CONFIGURACION DE ANIMACIONES PARA EL RATON
+						tips : {
+							trackMouse : true, //hace que el globo azul de mensajes siga al raton
+							width : 140, //el ancho del globo azul
+							height : 28, //alto del globo azul
+							//configuracion del texto que debe mostrar el globo azul
+							renderer : function(storeItem, item) {
+								this.setTitle(storeItem.get('nombreBarra') + ': ' + storeItem.get('valorBarra') + "%");
+							}
+						},
+						//CONFIGURACION DE COMO SE VAN A MOSTRAR LOS DATOS
+						label : {
+							display : 'insideEnd',
+							'text-anchor' : 'middle', //alineacion de los textos sobre las barras
+							field : 'valorBarra',
+							renderer : Ext.util.Format.numberRenderer('0.1%'), //formato de los valores numericos a mostrar
+							orientation : 'horizontal', // la direccion del texto dentro de las barras, otro valor es vertical
+						},
+						xField : 'nombreBarra', //que campo del objeto datosBarras es para el eje x
+						yField : 'valorBarra' //que campo del objeto datosBarras es para el eje y
+					}]
+				});
+				
+				
+				Ext.create('Ext.chart.Chart', {
+					renderTo : "contenedor-pastel", //el id del DIV contenedor de esta grafica	
+					width : 500, //ancho grafica
+					height : 350, //alto grafica
+					animate : true, //habilta una animacion al cargar la pagina
+					store : almacenDatos, //el objeto que contiene los datos de la grafica
+					//CONFIGUARCION DE LOS DATOS DE LA GRAFICA
+					theme : 'Base:gradients',
+					series : [{
+						type : 'pie', //dejar como pie siempre
+						angleField : 'valorRebanada', //que campo del objeto datosPastel se va usar para llenar las rebanadas
+						showInLegend : true, //muestra un globo azul con los datos de la rebanada al poner el raton encima
+						//CONFIGURA EL GLOBO AZUL DE MENSAJES
+						tips : {
+							trackMouse : true, //hace que el globo azul siga al raton
+							width : 140, //ancho del globo azul
+							height : 28, //alto del globo azul
+							//funcion para mostrar el texto del globo azul
+							renderer : function(storeItem, item) {
+
+								//muestra el texto del globo azul
+								this.setTitle(storeItem.get('nombreRebanada') + ': ' + storeItem.get('valorRebanada') + '%');
+							}
+						},						
+						//CONFIGURACION DE ANIMACION DE LAS REBANADAS						
+						highlight : {
+							segment : {
+								margin : 20 //cuanto se separa la rebanada al poner el raton encima
+							}
+						},
+						//CONFIGURACION DE LOS TEXTOS DE LAS REBANADAS
+						label : {
+							field : 'nombreRebanada', //que campo del objeto datosPastel se usa para los nombres en al rebanada
+							display : 'rotate', //hace que el texto aparezca rotado
+							contrast : true, //habilita un cambio ligero en el color de texto para hacer contraste con la rebanada
+							font : '18px Arial' //tam y tipo de fuente de los textos en la rebanada
+						}
+					}]
+				});
+
+
+			});
+			
+			
+			
+			
+
 
 		</script>
 	</head>

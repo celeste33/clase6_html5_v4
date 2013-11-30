@@ -28,6 +28,23 @@
 
 		<script type="text/javascript">
 			Ext.onReady(function(){
+				
+				var datosPastel = [{
+					valorRebanada:40,
+					nombreRebanada:"Chrome"
+				},{
+					valorRebanada:30,
+					nombreRebanada:"Firefox"
+				},{
+					valorRebanada:30,
+					nombreRebanada:"IE"
+				}];
+				
+				var almacenDatos = Ext.create("Ext.data.JsonStore",{
+					fields:["nombreRebanada","valorRebanada"],
+					data:datosPastel
+				});
+				
 
 				//se crea un arreglo de objetos
 				//cada uno de estos objetos contiene la informacion que se va usar
@@ -44,7 +61,7 @@
 					width : 500, //ancho grafica
 					height : 350, //alto grafica
 					animate : true, //habilta una animacion al cargar la pagina
-					store : ALMACEN_DATOS, //el objeto que contiene los datos de la grafica
+					store : almacenDatos, //el objeto que contiene los datos de la grafica
 					//CONFIGUARCION DE LOS DATOS DE LA GRAFICA
 					theme : 'Base:gradients',
 					series : [{
